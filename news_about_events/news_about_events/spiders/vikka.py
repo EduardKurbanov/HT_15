@@ -67,6 +67,12 @@ class VikkaSpider(scrapy.Spider):
 
             yield req
 
+        next_page = soup.find("a", class_="next page-numbers").get("href")
+        if next_page is not None:
+            req = scrapy.http.Request(url=next_page, callback=self.pars_news)
+            req.meta['item'] = item.copy()
+            yield req
+
     def par_text_tag(self, request):
         data = request.meta['item']
         soup = BeautifulSoup(request.text, "lxml")
